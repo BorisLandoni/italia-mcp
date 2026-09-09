@@ -1,7 +1,8 @@
 # italia-mcp
 
 **Servizi italiani essenziali per assistenti vocali, via MCP.** Meteo, allerte della
-Protezione Civile, notizie ANSA e promemoria — in italiano, con 8 strumenti in tutto.
+Protezione Civile, notizie ANSA, novità editoriali e promemoria — in italiano,
+con 9 strumenti in tutto.
 
 > *Italian essentials (weather, Civil Protection alerts, ANSA news, reminders) as a
 > Model Context Protocol server. Tool descriptions and responses are in Italian.*
@@ -18,8 +19,8 @@ ESP32 i vincoli sono un altro mondo:
 
 | | server MCP meteo tipico | `italia-mcp` |
 |---|---|---|
-| Numero di strumenti | 17 | **8** |
-| Peso dell'elenco strumenti | ~29.700 token | **~800 token** |
+| Numero di strumenti | 17 | **9** |
+| Peso dell'elenco strumenti | ~29.700 token | **~1.000 token** |
 | Risposta | JSON grezzo, fino a 25.000 caratteri | **sotto 1.024 byte** |
 | Lingua | inglese, fuso GMT | **italiano, fuso locale** |
 | Come indichi il luogo | latitudine e longitudine | **nome del comune** |
@@ -37,6 +38,7 @@ si perde. Tutto il resto del progetto discende da questo.
 | `allerte_protezione_civile(comune)` | Allerta gialla/arancione/rossa per temporali, rischio idraulico e idrogeologico |
 | `qualita_aria(citta)` | Indice europeo, PM10, PM2.5 |
 | `notizie_italia(argomento)` | Ultimi titoli ANSA: principali, cronaca, politica, economia, mondo, tecnologia, sport |
+| `novita_futura(sezione)` | Ultimi articoli di Elettronica In ed Elettronica In PRO, ultimi prodotti FuturaShop |
 | `promemoria_aggiungi(testo)` | Aggiunge un promemoria o un articolo alla lista della spesa |
 | `promemoria_elenco()` | Legge la lista |
 | `promemoria_rimuovi(numero_o_testo)` | Toglie una voce, o svuota tutto con `"tutto"` |
@@ -47,13 +49,47 @@ si perde. Tutto il resto del progetto discende da questo.
 pip install italia-mcp
 ```
 
-Poi, per provarlo:
+Oppure, dalla sorgente:
+
+```bash
+git clone https://github.com/BorisLandoni/italia-mcp.git
+cd italia-mcp
+python3 -m venv .venv
+./.venv/bin/python -m pip install -e .
+```
+
+### Provalo subito, senza collegare niente
+
+```bash
+python prova.py
+```
+
+Chiama tutti gli strumenti uno per uno e misura quanto pesa ogni risposta:
+
+```
+[            ok]  148 byte    448 ms  meteo_adesso
+[            ok]  228 byte   1010 ms  allerte_protezione_civile
+[            ok]  371 byte    685 ms  novita_futura [rivista]
+...
+Risposta piu' pesante: 409 byte su un limite di 1024.
+Tutti gli strumenti rispondono correttamente.
+```
+
+Per avviare il server vero:
 
 ```bash
 italia-mcp
 ```
 
-Il server parla MCP su stdio: da solo non stampa nulla, è normale.
+Il cursore resta fermo e non compare nulla: **è corretto.** Il server parla MCP su
+stdin/stdout e aspetta un client. Se stampasse qualcosa, romperebbe il protocollo.
+
+### Guide dettagliate
+
+- **[Installare e provare su PC](docs/pc.md)** — Windows, macOS, Linux, passo passo
+- **[Raspberry Pi come gateway sempre acceso](docs/raspberry.md)** — servizio systemd,
+  riavvio automatico, log, aggiornamenti
+- **[Collegare il panda (xiaozhi)](xiaozhi/README.md)** — endpoint MCP e ponte
 
 ## Uso con Claude Desktop, Cursor e simili
 
@@ -103,6 +139,7 @@ Dalla [documentazione ufficiale](https://my.feishu.cn/wiki/HiPEwZ37XiitnwktX13cE
 | Meteo, previsioni, qualità aria | [Open-Meteo](https://open-meteo.com) | CC BY 4.0, gratuito senza chiave |
 | Allerte meteo-idro | [Dipartimento della Protezione Civile](https://github.com/pcm-dpc/DPC-Bollettini-Criticita-Idrogeologica-Idraulica), in CSV via [OpenData Sicilia](https://github.com/opendatasicilia/DPC-bollettini-criticita-idrogeologica-idraulica) | CC BY 4.0 |
 | Notizie | Feed RSS pubblici [ANSA](https://www.ansa.it) | uso citazionale dei soli titoli |
+| Novità editoriali | Feed RSS di [Elettronica In](https://ei.futuranet.it), [Elettronica In PRO](https://eipro.futuranet.it) e [FuturaShop](https://futuranet.it) | uso citazionale dei soli titoli |
 
 **Nessuna chiave API richiesta.**
 
@@ -126,6 +163,12 @@ Ogni risposta include `valido_fino`.
   scambiano solo testo.
 - I promemoria sono salvati in un file locale, senza account: chi ha accesso al
   server li vede tutti.
+
+## Personalizzare le fonti
+
+Le fonti di `novita_futura` sono ridefinibili con la variabile d'ambiente
+`ITALIA_MCP_FONTI`, nel formato `chiave=URL|Etichetta;chiave2=URL2|Etichetta2`:
+chi usa il pacchetto può puntarlo ai propri feed.
 
 ## Licenza
 

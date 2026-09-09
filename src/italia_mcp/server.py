@@ -10,6 +10,7 @@ Regole di progetto (dai vincoli della piattaforma xiaozhi/小智):
 from mcp.server.fastmcp import FastMCP
 
 from . import allerte as _allerte
+from . import futura as _futura
 from . import meteo as _meteo
 from . import notizie as _notizie
 from . import promemoria as _promemoria
@@ -59,6 +60,17 @@ def notizie_italia(argomento: str = "principali") -> dict:
     Gli argomenti disponibili sono: principali, cronaca, politica, economia,
     mondo, tecnologia, sport."""
     return _notizie.notizie(argomento)
+
+
+@mcp.tool()
+def novita_futura(sezione: str = "elettronica-in") -> dict:
+    """Ultimi articoli pubblicati dalla rivista Elettronica In, da Elettronica In PRO,
+    oppure ultimi prodotti messi in vendita da FuturaShop (Futura Elettronica).
+    Usalo quando l'utente chiede le ultime novita', gli ultimi articoli, cosa e'
+    uscito di nuovo sulla rivista o quali sono i prodotti appena arrivati.
+    Il parametro sezione accetta: "elettronica-in" per gli articoli della rivista,
+    "elettronica-in-pro" per quelli professionali, "prodotti" per il negozio."""
+    return _futura.novita(sezione)
 
 
 @mcp.tool()
