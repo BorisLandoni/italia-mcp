@@ -22,8 +22,26 @@ pip install italia-mcp websockets python-dotenv
 
 **2. Prendi il ponte ufficiale**
 
+`mcp_pipe.py` è pubblicato da 虾哥 senza licenza esplicita, quindi non è incluso qui:
+va scaricato dal repo originale.
+
+Su Linux e macOS:
+
 ```bash
 curl -O https://raw.githubusercontent.com/78/mcp-calculator/main/mcp_pipe.py
+```
+
+Su Windows, in PowerShell (attenzione: `curl` è un alias di `Invoke-WebRequest` e
+`&&` non esiste in PowerShell 5.1, quindi va usata questa forma):
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/78/mcp-calculator/main/mcp_pipe.py" -OutFile "mcp_pipe.py"
+```
+
+Gli servono due librerie in più:
+
+```bash
+pip install websockets python-dotenv
 ```
 
 **3. Copia l'indirizzo dell'endpoint**
