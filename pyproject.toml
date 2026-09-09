@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "italia-mcp"
+version = "0.1.0"
+description = "Servizi italiani essenziali (meteo, allerte Protezione Civile, notizie ANSA, promemoria) per assistenti vocali via MCP"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Boris Landoni" }]
+keywords = ["mcp", "italia", "meteo", "protezione-civile", "ansa", "xiaozhi", "voice-assistant"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: Italian",
+  "Programming Language :: Python :: 3",
+  "Topic :: Home Automation",
+]
+dependencies = ["mcp>=1.8,<2"]
+
+[project.urls]
+Homepage = "https://github.com/BorisLandoni/italia-mcp"
+Issues = "https://github.com/BorisLandoni/italia-mcp/issues"
+
+[project.scripts]
+italia-mcp = "italia_mcp.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/italia_mcp"]

@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "italia": {
+      "command": "italia-mcp"
+    },
+
+    "_commento": "Un endpoint xiaozhi ha un tetto di connessioni e mcp_pipe.py apre UNA connessione per ogni server elencato qui. Tieni acceso un solo server: se ti servono piu' fonti, usa xiaozhi-client che le aggrega in una sola connessione.",
+
+    "homeassistant": {
+      "type": "sse",
+      "url": "http://homeassistant.local:8123/mcp_server/sse",
+      "headers": { "Authorization": "Bearer IL_TUO_TOKEN" },
+      "disabled": true
+    }
+  }
+}
