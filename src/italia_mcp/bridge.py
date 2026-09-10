@@ -80,28 +80,80 @@ async def _servi(websocket, server) -> None:
         gruppo.cancel_scope.cancel()
 
 
-async def _ciclo(endpoint: str) -> None:
-    """Si collega e resta collegato, riprovando con attesa crescente."""
+async def _ciclo(endpoint: str, su_stato=None) -> None:
+    """Si collega e resta collegato, riprovando con attesa crescente.
+
+    su_stato, se passato, viene richiamato con "collegato", "scollegato" o
+    "errore": serve all'interfaccia grafica per accendere il pallino."""
     server = mcp._mcp_server
     attesa = ATTESA_INIZIALE
     tentativo = 0
+
+    def stato(valore, dettaglio=""):
+        if su_stato:
+            try:
+                su_stato(valore, dettaglio)
+            except Exception:
+                pass
 
     while True:
         try:
             logger.info("Mi collego a xiaozhi...")
             async with websockets.connect(endpoint, ping_interval=20) as websocket:
                 logger.info("Collegato. Il panda ora ha gli strumenti italiani.")
+                stato("collegato")
                 attesa = ATTESA_INIZIALE
                 tentativo = 0
                 await _servi(websocket, server)
             logger.warning("Connessione chiusa dal server.")
+            stato("scollegato")
         except Exception as errore:
-            logger.error("Errore di connessione: %s", errore)
+            codice = getattr(getattr(errore, "response", None), "status_code", None)
+            if codice in (401, 403):
+                logger.error("Indirizzo rifiutato da xiaozhi (HTTP %s): "
+                             "controlla di aver copiato tutto l'indirizzo.", codice)
+                stato("errore", f"indirizzo rifiutato (HTTP {codice})")
+            else:
+                logger.error("Errore di connessione: %s", errore)
+                stato("errore", str(errore))
 
         tentativo += 1
         logger.info("Nuovo tentativo (%d) fra %d secondi...", tentativo, attesa)
         await anyio.sleep(attesa)
         attesa = min(attesa * 2, ATTESA_MASSIMA)
+
+
+def avvia_in_thread(endpoint: str, su_stato=None):
+    """Fa girare il ponte in un thread separato. Restituisce la funzione per fermarlo.
+
+    Serve all'interfaccia grafica: tkinter deve restare sul thread principale."""
+    from anyio.from_thread import start_blocking_portal
+
+    contesto = start_blocking_portal()
+    portale = contesto.__enter__()
+    contenitore = {}
+
+    async def esecuzione():
+        with anyio.CancelScope() as ambito:
+            contenitore["ambito"] = ambito
+            await _ciclo(endpoint, su_stato)
+
+    portale.start_task_soon(esecuzione)
+
+    def ferma():
+        try:
+            ambito = contenitore.get("ambito")
+            if ambito is not None:
+                portale.call(ambito.cancel)
+        except Exception:
+            pass
+        finally:
+            try:
+                contesto.__exit__(None, None, None)
+            except Exception:
+                pass
+
+    return ferma
 
 
 async def _diagnostica(endpoint: str | None) -> int:
@@ -160,7 +212,10 @@ def main() -> None:
         datefmt="%H:%M:%S",
     )
 
-    endpoint = (argomenti.endpoint or "").strip().strip('"').strip("'")
+    from . import config
+    endpoint = config.normalizza_endpoint(argomenti.endpoint or "")
+    if not endpoint:
+        endpoint = config.endpoint_salvato()
 
     if argomenti.selftest:
         sys.exit(anyio.run(_diagnostica, endpoint or None))
@@ -169,9 +224,10 @@ def main() -> None:
         print("Manca l'indirizzo dell'endpoint MCP.\n")
         print("Prendilo dalla console di xiaozhi.me:")
         print("  Configure -> Extensions -> MCP Endpoint -> icona copia\n")
-        print("Poi mettilo in un file .env accanto a questo programma:")
+        print("Poi passalo con  --endpoint wss://...")
+        print("oppure mettilo in un file .env accanto a questo programma:")
         print("  MCP_ENDPOINT=wss://api.xiaozhi.me/mcp/?token=...\n")
-        print("oppure passalo con  --endpoint wss://...")
+        print("La finestra grafica lo salva da sola: avviala senza argomenti.")
         sys.exit(2)
 
     if not endpoint.startswith(("ws://", "wss://")):

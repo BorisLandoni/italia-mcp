@@ -84,12 +84,26 @@ italia-mcp
 Il cursore resta fermo e non compare nulla: **è corretto.** Il server parla MCP su
 stdin/stdout e aspetta un client. Se stampasse qualcosa, romperebbe il protocollo.
 
+### Windows: applicazione con finestra
+
+Chi non vuole toccare Python puo' scaricare **`PandaItalia.exe`** dalla pagina
+[Releases](https://github.com/BorisLandoni/italia-mcp/releases): un file unico
+da ~19 MB, senza installazione. Si incolla l'indirizzo dell'endpoint una volta
+sola, viene salvato, e dai lanci successivi il collegamento parte da solo.
+
+E' pensato per la **prova rapida**: Windows va in sospensione e i riavvii di
+Windows Update interrompono il collegamento circa una volta al mese. Per l'uso
+continuativo vedi la guida Raspberry.
+
 ### Guide dettagliate
 
 - **[Installare e provare su PC](docs/pc.md)** — Windows, macOS, Linux, passo passo
 - **[Raspberry Pi come gateway sempre acceso](docs/raspberry.md)** — servizio systemd,
   riavvio automatico, log, aggiornamenti
 - **[Collegare il panda (xiaozhi)](xiaozhi/README.md)** — endpoint MCP e ponte
+- **[Elecrow AI Panda ChatBot](elecrow/panda/README.md)** — guida specifica per
+  quel dispositivo, e stato della ricerca sui sorgenti del firmware
+- **[Creare l'eseguibile Windows](packaging/README.md)** — per chi vuole compilarlo
 
 ## Uso con Claude Desktop, Cursor e simili
 
@@ -173,3 +187,10 @@ chi usa il pacchetto può puntarlo ai propri feed.
 ## Licenza
 
 Codice: MIT. I dati restano dei rispettivi titolari, alle licenze indicate sopra.
+
+## Crediti
+
+Sviluppato da **Boris Landoni** con l'assistenza di Claude (Anthropic), per
+**[Futura Group Srl](https://futuranet.it)** — editore di
+**[Elettronica In](https://ei.futuranet.it)** e
+**[Elettronica In PRO](https://eipro.futuranet.it)**.

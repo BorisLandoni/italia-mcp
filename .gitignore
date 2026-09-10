@@ -7,3 +7,9 @@ dist/
 *.egg-info/
 .env
 mcp_pipe.py
+
+# gli eseguibili compilati non vanno in git: si distribuiscono come Release
+dist/
+elecrow/panda/dist/
+*.exe
+*.spec

@@ -9,7 +9,8 @@ description = "Servizi italiani essenziali (meteo, allerte Protezione Civile, no
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Boris Landoni" }]
+authors = [{ name = "Boris Landoni", email = "b.landoni@futuranet.it" }]
+maintainers = [{ name = "Futura Group Srl" }]
 keywords = ["mcp", "italia", "meteo", "protezione-civile", "ansa", "xiaozhi", "voice-assistant"]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -28,6 +29,9 @@ Issues = "https://github.com/BorisLandoni/italia-mcp/issues"
 [project.scripts]
 italia-mcp = "italia_mcp.__main__:main"
 italia-mcp-bridge = "italia_mcp.bridge:main"
+
+[project.gui-scripts]
+panda-italia = "italia_mcp.gui:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/italia_mcp"]
