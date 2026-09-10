@@ -98,7 +98,37 @@ un port, è un bring-up hardware da zero.
 
 Unico canale: `techsupport@elecrow.com`.
 
-Nota anche che, con la partition table di default, i 16 MB di flash risultano
-già occupati (nvs, otadata, phy_init, due partizioni OTA e gli asset): la cache
-del bollettino della Protezione Civile, da circa 2,7 MB, non avrebbe dove
-stare senza sacrificare il rollback OTA.
+### Cosa dice il dispositivo di sé
+
+Il panda espone una porta seriale **CH340K** sulla USB-C e si lascia leggere
+senza aprire il guscio. Un dump della flash in sola lettura rivela che **il
+board file esiste** e segue le convenzioni del progetto originale:
+
+```
+./main/boards/esp32s3-elecrow-ai-panda-chatbot/esp32s3_elecrow_ai_panda_chatbot.cc
+class ESP32S3_Elecrow_AI_Panda_Chatbot
+```
+
+Da lì si ricava anche l'hardware: codec audio **ES8311** su I2C, display
+**GC9A01** su SPI (colore invertito, mirror X), LED **WS2812** via RMT,
+retroilluminazione PWM, batteria letta su ADC1 con calibrazione. Nessun
+controller touch. Il firmware è compilato su **ESP-IDF v5.4.2** il 17 dicembre
+2025, e usa l'endpoint OTA standard `api.tenclass.net` — Elecrow non ha un
+canale di aggiornamento proprio.
+
+Restano ignoti solo i **numeri dei GPIO**, che sono costanti compilate. Una
+ricerca sul codice di GitHub conferma che quella directory non è pubblicata da
+nessuno.
+
+### La flash, misurata
+
+| Partizione | Dimensione | Occupata |
+|---|---|---|
+| `model` | 0,94 MB | 0,28 MB |
+| `ota_0` (attiva) | 7,00 MB | 6,03 MB |
+| `ota_1` | 7,00 MB | vuota |
+| non partizionato | 1,00 MB | — |
+
+Restano circa **0,97 MB** liberi nello slot applicazione e **1,00 MB** in coda
+alla flash. La cache del bollettino della Protezione Civile (~2,7 MB) non entra
+in nessuno dei due senza ripartizionare.
