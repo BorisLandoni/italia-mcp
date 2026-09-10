@@ -11,6 +11,35 @@ Nato per il chatbot vocale **[xiaozhi-esp32](https://github.com/78/xiaozhi-esp32
 (il "panda"), ma è un normale server MCP: funziona con Claude Desktop, Cursor,
 Cherry Studio e qualsiasi client compatibile.
 
+---
+
+## ⬇️ Scarica per Windows
+
+### **[PandaItalia.exe](https://github.com/BorisLandoni/italia-mcp/releases/latest/download/PandaItalia.exe)** · 19 MB · nessuna installazione
+
+Un file, doppio clic. Python non serve. Incolli l'indirizzo del tuo dispositivo
+**una volta sola**: viene salvato e dal secondo avvio il collegamento parte da
+solo.
+
+1. Su [xiaozhi.me](https://xiaozhi.me) → **Configure** → **Extensions**: togli
+   la spunta a **`Weather`** e premi **Save**
+2. Sempre lì → **MCP Endpoint** → icona **copia**
+3. Avvia il programma → **Incolla** → **Collega**
+
+Poi chiedi al tuo dispositivo: *"Che tempo fa a Gallarate?"*
+
+> L'eseguibile non è firmato: al primo avvio Windows mostra *"Windows ha
+> protetto il PC"* → **Ulteriori informazioni** → **Esegui comunque**.
+>
+> È pensato per la **prova rapida**. Windows va in sospensione e i riavvii di
+> Windows Update interrompono il collegamento circa una volta al mese: per
+> l'uso continuativo vedi la **[guida Raspberry](docs/raspberry.md)**.
+
+Su macOS e Linux, e per chi preferisce Python:
+**[guida PC](docs/pc.md)** · [tutte le versioni](https://github.com/BorisLandoni/italia-mcp/releases)
+
+---
+
 ## Perché esiste
 
 I server MCP meteo che si trovano in giro sono pensati per assistenti da scrivania,
@@ -83,17 +112,6 @@ italia-mcp
 
 Il cursore resta fermo e non compare nulla: **è corretto.** Il server parla MCP su
 stdin/stdout e aspetta un client. Se stampasse qualcosa, romperebbe il protocollo.
-
-### Windows: applicazione con finestra
-
-Chi non vuole toccare Python puo' scaricare **`PandaItalia.exe`** dalla pagina
-[Releases](https://github.com/BorisLandoni/italia-mcp/releases): un file unico
-da ~19 MB, senza installazione. Si incolla l'indirizzo dell'endpoint una volta
-sola, viene salvato, e dai lanci successivi il collegamento parte da solo.
-
-E' pensato per la **prova rapida**: Windows va in sospensione e i riavvii di
-Windows Update interrompono il collegamento circa una volta al mese. Per l'uso
-continuativo vedi la guida Raspberry.
 
 ### Guide dettagliate
 
