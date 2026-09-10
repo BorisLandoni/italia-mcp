@@ -19,7 +19,7 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Topic :: Home Automation",
 ]
-dependencies = ["mcp>=1.8,<2"]
+dependencies = ["mcp>=1.8,<2", "websockets>=13", "python-dotenv>=1.0"]
 
 [project.urls]
 Homepage = "https://github.com/BorisLandoni/italia-mcp"
@@ -27,6 +27,7 @@ Issues = "https://github.com/BorisLandoni/italia-mcp/issues"
 
 [project.scripts]
 italia-mcp = "italia_mcp.__main__:main"
+italia-mcp-bridge = "italia_mcp.bridge:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/italia_mcp"]
